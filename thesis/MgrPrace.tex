@@ -1,0 +1,201 @@
+%%%%% Single page layout:
+%%%%% -----------------------------------
+\newcommand{\singlePage}{
+	\documentclass[12pt, a4paper]{report}
+	\setlength\textwidth{145mm}
+	\setlength\textheight{247mm}
+	\setlength\oddsidemargin{15mm}
+	\setlength\evensidemargin{15mm}
+	\setlength\topmargin{0mm}
+	\setlength\headsep{0mm}
+	\setlength\headheight{0mm}
+	\let\openright=\clearpage
+}
+
+
+%%%%% Double page layout
+%%%%% -----------------------------------
+\newcommand{\doublePage}{
+	\documentclass[12pt, a4paper, twoside, openright]{report}
+	\setlength\textwidth{145mm}
+	\setlength\textheight{247mm}
+	\setlength\oddsidemargin{15mm}
+	\setlength\evensidemargin{0mm}
+	\setlength\topmargin{0mm}
+	\setlength\headsep{0mm}
+	\setlength\headheight{0mm}
+	\let\openright=\cleardoublepage
+}
+
+%\singlePage
+\doublePage
+
+
+%%% Additional useful packages
+%%% ----------------------------------------------------------------
+\usepackage{amsmath}        
+\usepackage{amsfonts}       
+\usepackage{amsthm}         
+\usepackage{bm}             
+\usepackage{graphicx}       
+%\usepackage{psfrag}         
+\usepackage{fancyvrb}       
+\usepackage{natbib}         
+%\usepackage[round]{natbib}         
+\usepackage{bbding}         
+\usepackage{dcolumn}        
+\usepackage{booktabs}       
+\usepackage{paralist}       
+%\usepackage{indentfirst}    
+\usepackage[nottoc]{tocbibind}
+\usepackage[mathscr]{euscript}
+\usepackage{epstopdf}
+\usepackage[small,labelfont=bf,up,textfont=up]{caption, subcaption}
+%\usepackage{subcaption}
+\usepackage{multirow,tabularx}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+%\usepackage{trackchanges}
+\usepackage{mathtools}
+\usepackage{xfrac}
+%\usepackage{tabulary}
+\usepackage{tikz}
+%\usepackage{showframe}
+\usepackage[unicode]{hyperref}
+\usepackage{rotating}
+
+\usepackage{lipsum}
+
+%\overfullrule=1mm
+
+\usepackage{floatrow}
+\DeclareFloatFont{tableFontSize}{\small}% "scriptsize" is defined by floatrow, "tiny" not
+\floatsetup[table]{font=tableFontSize}
+
+\input{macros/R}
+
+\hypersetup{pdftitle=Thesis Title, 
+            pdfauthor=Name Surname,
+            ps2pdf,
+            colorlinks=false,
+            urlcolor=blue,
+            pdfstartview=FitH,
+            pdfpagemode=UseOutlines,
+            pdfnewwindow,
+            breaklinks
+          }
+
+
+
+%%% Deklarace prikazu
+%%% ----------------------------------------------------------------
+\newcommand{\FIGDIR}{./figures}    %%% directory containing figures
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\theoremstyle{plain}
+\newtheorem{definition}{Definition}[chapter]
+\newtheorem{algorithm}{Algorithm}[chapter]
+
+\theoremstyle{definition}
+\newtheorem*{note}{Note}
+\newtheorem{example}{Example}[chapter] % \demo
+\newtheorem*{notation}{Notation}
+
+
+\newenvironment{prooooF}{
+  \par\medskip\noindent
+  \textit{Proeof}.
+}{
+\newline
+\rightline{\square}
+}
+
+\newcommand\xqed[1]{%
+  \leavevmode\unskip\penalty9999 \hbox{}\nobreak\hfill
+  \quad\hbox{#1}}
+\newcommand\demo{\xqed{$\triangle$}}
+
+
+
+
+\bibliographystyle{plainnat}     %% Author (year) style
+%\bibliographystyle{myplainnat}     %% Author (year) style
+%\bibliographystyle{unsrt}        %% [number] style
+
+
+%%%%% ------------------------------------------------------------
+\DefineVerbatimEnvironment{PCinout}{Verbatim}{fontsize=\small, frame=single}
+
+\input{macros/operators}
+
+\newcommand{\noProof}[3]{
+	\begin{proof}
+		For example in \cite{#1}, page #2, Theorem #3.
+	\end{proof}
+}
+
+
+
+%%%%% Main document
+%%%%% ---------------------
+
+\begin{document}
+
+% TITULNI STRANY
+\include{macros/frontPage}
+
+\tableofcontents
+
+\include{00_intro}
+
+\part{Theory}
+	\input{01_markov}
+	\input{02_statistics}
+	\input{03_optimization}
+
+\part{Practical Applications}
+	\input{04_demand}
+	\input{05_pricing}
+
+%\part{Appendix}
+
+\renewcommand\thechapter{\Alph{chapter}}
+\renewcommand\chaptername{Appendix}
+\setcounter{chapter}{0}
+
+%\input{chapA1_00_r}
+	%\input{chapA1_01_transition}
+
+\nocite{Doob90}
+\nocite{Davis93}
+\nocite{Cleveland79}
+\nocite{Cleveland88}
+\nocite{Goel06}
+
+\bibliography{bibliography}
+
+\listoffigures
+
+\listoftables
+
+%\lstlistoflistings
+%\addcontentsline{toc}{chapter}{List of Scripts}
+
+%%% 
+%\chapter*{List of abbreviations}
+%\addcontentsline{toc}{chapter}{List of abbreviations}
+
+
+%%% The Appendix. 
+%\chapter*{Appendix}
+%\addcontentsline{toc}{chapter}{Appendix}
+
+
+
+\end{document}
+

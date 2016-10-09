@@ -1,0 +1,18 @@
+Process $\procX$ follows a Markov process with intensity $\bm{Q} (t, \bm{p})$. There exists a reward function $\varrho: \S \to \R$ given by
+\begin{align*}
+	\varrho (\m{0}) &= 0, \\
+	\varrho (\s') - \varrho (\s) &= p_{\s, \s'},
+\end{align*}
+for states $\s$ and $\s'$ that differ in one ticket with price $p_{\s, \s'}$. The multidimensional price is
+\[
+	\bm{p} = \left\{ p_{k,l,c}: (k,l) \in \mathcal{R}, c \in \mathcal{C} \left\}
+\]
+
+
+The optimization problem is
+\begin{equation*}
+	\begin{aligned}
+		& \underset{\varphi}{\max} & & \E_{\varphi} [\varrho(X_T)],
+	\end{aligned}
+\end{equation*}
+where $\varphi: \S \times \Rplus \to $ is a decision policy for the prices.

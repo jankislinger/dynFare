@@ -1,0 +1,175 @@
+%%%
+%%% MASTER'S THESIS TEMPLATE - ENGLISH
+%%%  
+%%%  * the first chapter
+%%%
+%%%  AUTHORS:  Arnost Komarek (komarek@karlin.mff.cuni.cz), 2011
+%%%            Michal Kulich (kulich@karlin.mff.cuni.cz), 2013
+%%%
+%%%  LAST UPDATED: 20130318
+%%%  
+
+\chapter{Typesetting of mathematical text}
+
+This chapter demonstrates a few examples of mathematical text typesetting.
+
+%%%%% ===============================================================================
+\section{Basic examples}
+
+
+A number in the mathematical mode with decimal point: $\pi \doteq 3.141\,592\,653\,589$.
+
+Test on a 5\% level, 95\% confidence interval.
+
+We have $\var(X) = \E X^2 - \bigl(\E X \bigr)^2$.
+
+\section{Mathematical expressions}
+Let
+\[
+\mathbb{X} = \begin{pmatrix}
+      \T{\bm x_1} \\
+      \vdots \\
+      \T{\bm x_n}
+      \end{pmatrix}.
+\]
+Note the period after the matrix. The mathematical text is a part of
+the sentence grammar and requires standard punctuation. Expressions
+that will be referenced should be numbered:
+\begin{equation}\label{eq01:Xmat}
+\mathbb{X} = \begin{pmatrix}
+      \T{\bm x_1} \\
+      \vdots \\
+      \T{\bm x_n}
+      \end{pmatrix}.
+\end{equation}
+Expression \eqref{eq01:Xmat} defines matrix $\mathbb{X}$. To achieve
+better readability and organization, it is advised to number only those
+expressions that are referenced. Do not number all displayed
+expressions automatically.
+
+Aligning of expressions into several columns:
+\begin{alignat*}{3}
+S(t) &= \pr(T > t),    &\qquad t&>0       &\qquad&\text{ (right-continuous),}\\
+F(t) &= \pr(T \leq t), &\qquad t&>0       &\qquad&\text{ (right-continuous).}
+\end{alignat*}
+
+Two binded equations:
+\begin{equation}\label{eq01:FS}
+\left.
+\begin{aligned}
+S(t) &= \pr(T > t) \\[1ex]
+F(t) &= \pr(T \leq t)
+\end{aligned}
+\right\}
+\quad t>0 \qquad \text{(right-continuous).}
+\end{equation}
+
+Two centered unnumbered equations:
+\begin{gather*}
+\bm Y = \mathbb{X}\bm\beta + \bm\varepsilon, \\[1ex]
+\mathbb{X} = \begin{pmatrix} 1 & \T{\bm x_1} \\ \vdots & \vdots \\ 1 &
+  \T{\bm x_n} \end{pmatrix}.
+\end{gather*}
+Two centered numbered equations:
+\begin{gather}
+\bm Y = \mathbb{X}\bm\beta + \bm\varepsilon, \label{eq02:Y}\\[1ex]
+\mathbb{X} = \begin{pmatrix} 1 & \T{\bm x_1} \label{eq03:X}\\ \vdots & \vdots \\ 1 &
+  \T{\bm x_n} \end{pmatrix}.
+\end{gather}
+
+Definition organized by cases:
+\[
+P_{r-j}=
+\begin{cases}
+0 & \text{if $r-j$ is odd},\\
+r!\,(-1)^{(r-j)/2} & \text{if $r-j$ is even}.
+\end{cases}
+\]
+Note the use of punctuation in the equation. Commas and periods are
+placed according to the standard English language rules.
+
+\begin{align}
+x& = y_1-y_2+y_3-y_5+y_8-\dots && \text{by \eqref{eq02:Y}} \nonumber\\
+& = y'\circ y^* && \text{by \eqref{eq03:X}} \nonumber\\
+& = y(0) y' && \text {by Axiom 1.}
+\end{align}
+
+Two unnumbered aligned equations:
+\begin{align*}
+L(\bm\theta) &= \prod_{i=1}^n f_i(y_i;\,\bm\theta), \\
+\ell(\bm\theta) &= \log\bigl\{L(\bm\theta)\bigr\} = 
+\sum_{i=1}^n \log\bigl\{f_i(y_i;\,\bm\theta)\bigr\}.
+\end{align*}
+Two aligned equations, the first numbered:
+\begin{align}
+L(\bm\theta) &= \prod_{i=1}^n f_i(y_i;\,\bm\theta), \label{eq01:L} \\
+\ell(\bm\theta) &= \log\bigl\{L(\bm\theta)\bigr\} = 
+\sum_{i=1}^n \log\bigl\{f_i(y_i;\,\bm\theta)\bigr\}. \nonumber
+\end{align}
+
+Two-line equation, the first line aligned left, the second line
+aligned right, unnumbered:
+\begin{multline*}
+\ell(\mu,\,\sigma^2) = \log\bigl\{L(\mu,\,\sigma^2)\bigr\} = 
+\sum_{i=1}^n \log\bigl\{f_i(y_i;\,\mu,\,\sigma^2)\bigr\} \\
+  = -\,\frac{n}{2}\,\log(2\pi\sigma^2) \,-\, 
+\frac{1}{2\sigma^2}\sum_{i=1}^n\,(y_i - \mu)^2. 
+\end{multline*}
+
+Two-line equation, aligned to $=$, numbered in the middle:
+\begin{equation}\label{eq01:ell}
+\begin{split}
+\ell(\mu,\,\sigma^2) &= \log\bigl\{L(\mu,\,\sigma^2)\bigr\} = 
+\sum_{i=1}^n \log\bigl\{f(y_i;\,\mu,\,\sigma^2)\bigr\} \\
+& = -\,\frac{n}{2}\,\log(2\pi\sigma^2) \,-\, 
+\frac{1}{2\sigma^2}\sum_{i=1}^n\,(y_i - \mu)^2. 
+\end{split}
+\end{equation}
+
+
+%%%%% ===============================================================================
+\section{Definitions, theorems, proofs, \dots}
+
+Constructions like definitions, theorems, examples, \dots, should be
+separated from the surrounding  text and (usually) numbered, with the
+use of cross-references. For each of these constructions, the main
+source file (\texttt{BcPrace.tex}) should define an environment
+providing its visual separation from the surrounding text and
+numbering/cross-referencing features. 
+
+\begin{definice}\label{def01:1}
+  Let random variables $X_1,\dots,X_n$ be defined on the same
+  probability space $(\Omega,\,\mathcal{A},\,\pr)$. Then the vector
+  $\bm X = \T{(X_1,\dots,X_n)}$ is called a \emph{random
+    vector}.
+\end{definice}
+
+\begin{definice}[random vector]\label{def01:2}
+  Let random variables $X_1,\dots,X_n$ be defined on the same
+  probability space $(\Omega,\,\mathcal{A},\,\pr)$. Then the vector
+  $\bm X = \T{(X_1,\dots,X_n)}$ is called a \emph{random
+    vector}.
+\end{definice}
+Definition~\ref{def01:1} demonstrates an environment without a
+subtitle, definition~\ref{def01:2} includes a subtitle.
+
+\begin{veta}\label{veta01:1}
+  The random vector $\bm X$ is a measurable mapping of the space 
+  $(\Omega,\,\mathcal{A},\,\pr)$ to $(\R_n,\,\mathcal{B}_n)$.
+\end{veta}
+
+\begin{lemma}[\citealp{Andel07}, str. 29]\label{veta01:2}
+  The random vector $\bm X$ is a measurable mapping of the space 
+  $(\Omega,\,\mathcal{A},\,\pr)$ to $(\R_n,\,\mathcal{B}_n)$.
+\end{lemma}
+\begin{dukaz}
+  The detailed steps of the proof are described in the book \citet[p.
+  29]{Andel07}. 
+\end{dukaz}
+Theorem~\ref{veta01:1} demonstrates an environment without a subtitle,
+lemma~\ref{veta01:2} includes a reference in the subtitle. Lemmas were
+defined in the main file so that they share the same numbering with
+theorems.
+
+
+

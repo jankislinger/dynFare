@@ -1,0 +1,59 @@
+% general sets
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+% probability operators
+\DeclareMathOperator{\pr}{\mathbb{P}}
+\DeclareMathOperator{\E}{\mathbb{E}\,}
+\DeclareMathOperator{\var}{\textrm{var}}
+\DeclareMathOperator{\sd}{\textrm{sd}}
+
+% functions and constants
+\DeclareMathOperator{\e}{\mathrm{e}}
+%\DeclareMathOperator{\exp}{\textrm{exp}}
+
+%\newcommand{\m}[1]{\mathbf{#1}}
+\newcommand{\m}[1]{\bm{#1}}
+\newcommand{\probSpace}{(\Omega ,\, \mathcal{A} ,\, \pr)}
+\newcommand{\transSys}{\{ \m{P} (s ,\, t) ,\, t \geq s \geq 0 \}}
+\newcommand{\procX}{\m{X} = \{ X_t ,\, t \geq 0 \}}
+\newcommand{\proc}[1]{\m{#1} = \{ #1_t ,\, t \geq 0 \}}
+\newcommand{\vector}[1]{\bm{#1}}
+\newcommand{\Rplus}{[0, \infty)}
+\newcommand{\T}[1]{#1^\top}  % transposition of a matrix   
+
+% frequently used matrices
+\renewcommand{\x}{\mathbf{x}}
+\DeclareMathOperator{\y}{\m{y}}
+\DeclareMathOperator{\X}{\m{X}}
+\DeclareMathOperator{\z}{\mathbf{z}}
+\DeclareMathOperator{\Z}{\m{Z}}
+\DeclareMathOperator{\0}{\m{0}}
+\renewcommand{\s}{\m{s}}
+\renewcommand{\S}{\mathcal{S}}
+
+% statistics
+\newcommand{\indexij}{_{Y_{k-1}^{\nu} Y_{k}^{\nu}}}
+\newcommand{\indexi}{_{Y_{k-1}^{\nu}}}
+
+
+% optimization
+%\DeclareMathOperator{\max}{\textrm{max}}
+%\DeclareMathOperator{\min}{\textrm{min}}
+\DeclareMathOperator{\argmax}{\textrm{argmax}}
+\DeclareMathOperator{\argmin}{\textrm{argmin}}
+\DeclareMathOperator{\st}{\textrm{s.t.}}
+
+\newcommand{\goto}{\rightarrow}
+\newcommand{\gotop}{\stackrel{P}{\longrightarrow}}
+\newcommand{\gotod}{\stackrel{d}{\longrightarrow}}
+\newcommand{\maon}[1]{o(n^{#1})}
+\newcommand{\abs}[1]{\left|{#1}\right|}
+\newcommand{\dint}{\int_0^\tau\!\!\int_0^\tau}
+\newcommand{\isqr}[1]{\frac{1}{\sqrt{#1}}}
+
+\newcommand{\pulrad}[1]{\raisebox{1.5ex}[0pt]{#1}}
+\newcommand{\mc}[1]{\multicolumn{1}{c}{#1}}
+
+% derivative at point
+\newcommand{\at}[2][]{#1|_{#2}}

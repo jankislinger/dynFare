@@ -1,0 +1,473 @@
+\chapter{Estimating Transition Intensity}
+	\label{chap:statistics}
+
+In this chapter, we build several parametric models for intensity functions of inhomogeneous Markov process. For each of the models we propose a method for estimating the parameter using maximum likelihood. The theory of maximum likelihood estimates (MLE) is not described in this thesis. The reader can find general results for example in~\cite{Andel11}, Chapter~7.6. We try to keep the notation close to the notation at the mentioned book.
+
+We will estimate the parameter using embedded Markov chain and dwell times of multiple observations of Markov process on the same time interval. Let $\mathbf{X}^1, \dots, \mathbf{X}^n$ be a random sample from distribution of inhomogeneous Markov process with state space $S$, intensity $\m{Q} (t; \bm{\theta}_X)$, and initial probability $\m{p} (\bm{\theta}_X)$, where $\bm{\theta}_X \in \R^H$ is the unknown parameter. Denote by $K^{\nu}$ the number of jumps of process $\mathbf{X}^{\nu}$, by $T^{\nu}_1, ... , T^{\nu}_{K^{\nu}}$ the times of jumps and by $Y^{\nu}_0, ... , Y^{\nu}_{K^{\nu}}$ the embedded Markov chain.
+
+The likelihood function is of form
+\begin{multline}
+	L_n (\bm{\theta}; \mathbf{X}^1, \dots, \mathbf{X}^n) \\
+	=
+	\prod_{\nu=1}^n \Biggl[ p_{Y_0} (\mathbf{ \bm{\theta} })
+	\prod_{k=1}^{K^{\nu}} \left[ f_{T_{k-1}^{\nu}, Y_{k-1}^{\nu}} (T_k^{\nu} - T_{k-1}^{\nu}; \mathbf{ \bm{\theta} }) \: \frac{q_{ij} (T_k^{\nu}; \mathbf{ \bm{\theta} })}{q_{i} (T_k^{\nu}; \mathbf{ \bm{\theta} })} \right]
+	\\ 
+	\times \left( 1-F_{T_{K^{\nu}}^{\nu},Y_{K^{\nu}}^{\nu}} (T-T_{K^{\nu}}^{\nu}; \mathbf{ \bm{\theta} }) \right) \Biggr],
+	\label{eq:generalLik}
+\end{multline}
+where
+\[
+	F_{s,i} (x; \bm{\theta}) = 1 - \exp \left(- \int_{s}^{s+x} q_i(t; \bm{\theta}) dt \right)
+\]
+is the cumulative distribution function of the dwell time given that the process transitions at time $s$ into state $i$ and
+\[
+	f_{s,i} (x; \bm{\theta}) = \exp \left(- \int_{s}^{s+x} q_i(t; \bm{\theta}) dt \right) q_i(s+x; \bm{\theta})
+\]
+is the respective probability density function.
+
+Let use denote the likelihood function by $L_n (\bm{\theta})$ and exclude the observed data $\mathbf{X}^1, \dots, \mathbf{X}^n$ from the notation. Further we use standard notation $\ell_n (\bm{\theta}) = \log(L_n (\bm{\theta}))$ for log-likelihood, $\m{U}_n (\bm{\theta}) = \partial \ell_n (\bm{\theta}) / \partial \bm{\theta}$ for the score function, $\m{I}_n (\bm{\theta}) = -1/n \times \partial \m{U}_n (\bm{\theta}) / \partial \bm{\theta}$ for the observed information matrix, and $\m{I} (\bm{\theta}) = \E [\m{I}_n (\bm{\theta})]$ the Fisher information matrix.
+
+The true vector parameter $\bm{\theta}_X$ is estimated by parameter $\hat{\bm{\theta}}_n$ that maximizes the likelihood function. In most cases, that is equivalent to solving the system of equations $\m{U}_n (\bm{\theta}) = \m{0}$.
+
+In general case, one cannot calculate $\hat{\bm{\theta}}_n$ directly by solving the system of equations $\m{U}_n (\bm{\theta}) = \m{0}$. The MLE must be calculated by some numerical method. Here, we explain Newton-Raphson method. The method is iterative and updates the vector parameter at each iteration. Denote by $\bm{\theta}^{(r)}$ the $r$-th iteration of the algorithm. The $(r+1)$-th iteration is given by
+\[
+	\bm{\theta}^{(r+1)} = \bm{\theta}^{(r)} + \left[ n \m{I}_n (\bm{\theta}^{(r)}) \right]^{-1} \m{U}_n (\bm{\theta}^{(r)}).
+\]
+The algorithm is iterated until the value of $\m{U}_n (\bm{\theta}^{(r)})$ is sufficiently close to $\m{0}$. If the starting value $\bm{\theta}^{(0)$ is well chosen, the algorithm converges to the solution, i.e. $\bm{\theta}^{(r)} \to \hat{\bm{\theta}}_n$ as $r \to \infty$.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Homogeneous Markov Process}
+	\label{chap:statHomo}
+
+The simplest Markov process is the homogeneous case. The intensity is constant in time and depends only on the unknow parameter $\bm{\theta}$, i.e. for each $i,j \in S$ we can write
+\begin{align*}
+	q_{ij} (t; \mathbf{ \bm{\theta} }) &= q_{ij} (\mathbf{ \bm{\theta} }), \\
+	q_{i} (t; \mathbf{ \bm{\theta} }) &= q_{i} (\mathbf{ \bm{\theta} }).
+\end{align*}
+Also the cumulative distribution function and density can be simplified as
+\begin{align*}
+	F_{t,i} (x; \mathbf{ \bm{\theta} }) &= 1 - \e^{-x q_i(\mathbf{ \bm{\theta} })}, \\
+	f_{t,i} (x; \mathbf{ \bm{\theta} }) &= q_i(\mathbf{ \bm{\theta} }) \e^{-x q_i(\mathbf{ \bm{\theta} })}.
+\end{align*}
+Finally, the log-likelihood function is
+\begin{multline*}
+	\ell_n (\mathbf{ \bm{\theta} }; X^1, \dots, X^n) \\
+	= \sum_{\nu=1}^n \Biggl[ \log( p_{Y_0^{\nu}} (\bm{\theta})) +
+	\sum_{k=1}^{K^{\nu}} \bigg[ \log( q\indexij (\bm{\theta}) )
+	- q\indexi (\bm{\theta}) (T_k^{\nu} - T_{k-1}^{\nu}) \bigg] 
+	- \\
+	- q_{Y_{K^{\nu}}^{\nu}} (\mathbf{\bm{\theta}}) (T-T_{K^{\nu}}^{\nu}) \right) \Biggr].
+\end{multline*}
+
+This setup is still to general to derive any result that could be applicable to every parametrization of the intensity. Instead of that, we derive the properties of MLE for one special case. This process and its properties are taken from \cite{PraskovaLachout12}, Chapter 3.5.
+
+\begin{example}[Linear Growth Process]
+	The process is defined on state space $S = \N$ with inception at point $i=1$ and intensities
+	\[
+		q_{ij} (\theta) = \begin{cases}
+			-i \theta \qquad & \text{if } j=i \\
+			i \theta \qquad & \text{if } j=i+1 \\
+			0 \qquad & \text{else,}
+		\end{cases}
+	\]
+	where $\theta > 0$ is an unknown parameter (one-dimensional).
+	
+	The distribution of the process at fixed time is given by (see the referred book for proof)
+	\[
+		p_{1j} (0,t) = \e^{-j t \theta} (\e^{t \theta} - 1)^{j-1}.
+	\]
+	That implies that the expected value is
+	\begin{equation}
+		\label{eq:LGPmean}
+		\E [X_t] = \sum_{j=1}^{\infty} j \e^{-j t \theta} (\e^{t \theta} - 1)^{j-1} = \e^{t \theta}.
+	\end{equation*}
+	
+	Because the process is straightforward and for each state $i \in S$ there exists exactly one state $j \in S$ for which the process can transition from $i$ to $j$, we know that $Y_k = k+1$. With that, we can write	
+	\begin{align*}
+		q_{Y_{k-1},Y_{k}} (\theta) &= q_{k,k+1} (\theta) = k \theta \\
+		q_{Y_{k-1}} (\theta) &= q_{k} (\theta) = k \theta \\
+		p_{Y_0} &= p_1 = 1
+	\end{align*}
+	
+	Suppose we observe a random sample of size $n$ over time interval $[0,T]$. The log-likelihood function is	
+	\[
+		\ell_n (\theta)
+		= \sum_{\nu=1}^n \Biggl[ \sum_{k=1}^{K^{\nu}} \bigg[ \log( k \theta) - k \theta (T_k^{\nu} - T_{k-1}^{\nu}) \bigg] 
+		- (K^{\nu}+1) \theta (T-T_{K^{\nu}}^{\nu}) \Biggr],
+	\]
+	the score function is
+	\[
+		U_n (\theta)
+		= \sum_{\nu=1}^n \Biggl[ K^{\nu} \frac{1}{\theta} - \sum_{k=1}^{K^{\nu}} k (T_k^{\nu} - T_{k-1}^{\nu}) 
+		+ (K^{\nu}+1) (T-T_{K^{\nu}}^{\nu}) \Biggr],
+	\]
+	and the observed information matrix is
+	\[
+		I_n (\theta)
+		= \frac{1}{n} \sum_{\nu=1}^n K^{\nu} \frac{1}{\theta^2}
+		= \overline{K} \frac{1}{\theta^2}
+	\]
+	where $\overline{K} = \frac{1}{n} \sum_{\nu=1}^n K^{\nu}$ denotes the mean number of jumps.
+	
+	Solving the equation $U_n (\theta) = 0$ one get the MLE
+	\[
+		\hat{\theta}_n = \frac
+			{\sum_{\nu=1}^n K^{\nu}}
+			{\sum_{\nu=1}^n \Bigr[\sum_{k=1}^{K^{\nu}} k (T_k^{\nu} - T_{k-1}^{\nu}) + (K^{\nu}+1) (T-T_{K^{\nu}}^{\nu}) \Bigl]}
+	\]
+	
+	Given the fact that $K^{\nu} = X_T^{\nu} - 1$ and (\ref{eq:LGPmean}) one can calculate the Fisher information matrix
+	\[
+		I (\theta)
+		= \E [I_n (\theta)]
+		= \frac{\e^{T \theta} - 1}{\theta^2}.
+	\]
+	The asymptotic distribution of the estimate is
+	\[
+		\sqrt{n} (\hat{\theta}_n - \theta_X) \gotod N \left( 0, \frac{\theta_X^2}{\e^{T \theta_X} - 1} \right)
+		\text{ as } n \to \infty,
+	\]
+where $\theta_X$ denotes the true parameter.
+	
+	\demo
+\end{example}
+
+At the end of this section, let us state a proposition about estimation of full model. The result is straightforward and intuitive and the proposition is left without a proof.
+
+\begin{proposition}
+	Let $\X^1, ..., \X^n$ be a random sample from homogeneous Markov process with transition rate $\m{Q} = (q_{ij})_{i,j \in S}$ and initial probability vector $\m{p} = (p_i)_{i \in S}$. Denote by $N_{ij}$ total number of transitions from state $i$ to state $j$, by $M_i$ number of processes that initiates at state $i$, and by $T_i$ total time spent in state $i$. If $T_i > 0$, the MLE estimator of transition rates and initial probabilities are
+	\begin{align*}
+		\widehat{q_{ij}} = \frac{N_{ij}}{T_i}, \qquad
+		\widehat{p_i} = \frac{M_i}{n}.
+	\end{align*}
+	If $T_i = 0$, the result for initial probabilities holds and any estimate $\widehat{q_{ij}} \geq 0$ maximizes the (log-)likelihood.
+	\label{prop:generalMC}
+\end{proposition}
+
+Note that MLE estimators from Proposition~\ref{prop:generalMC} does not fulfill regularity conditions and not all results valid from MLE theory hold.
+%Further, it is clear that the MLE of initial probabilities hold when initial probabilities and transition rates are independent, i.e. we are able to separate the vector parameter (after reordering) $\bm{\theta} = (\bm{\theta_1}, \bm{\theta_2})$ such that $\m{p} (\bm{\theta}) = \m{p} (\bm{\theta_1})$ and $\m{Q} (\bm{\theta}) = \m{Q} (\bm{\theta_2})$. Because of that, we will assume in following that the vector of initial probabilities is known.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Separated Inhomogeneity}
+	\label{chap:statSeparInhom}
+	
+	Since this chapter, we assume that the distribution of initial probability $\m{p}$ is known and does not depend on the unknown parameter $\bm{\theta}$. In most of the examples we show in this thesis, the initial distribution is concentrated in single state space (either $p_0 = 1$ or $p_1 = 1$).
+
+Assume that $\X$ is Markov process process with separable inhomogeneity, i.e. its transition rate matrix is
+\[
+	\m{Q}(t) = \lambda(t) \m{\Gamma}, \qquad \forall t \geq 0.
+\]
+Let us further assume that the constant rate matrix $\m{\Gamma} = \{\gamma_{ij}, i,j \in S \}$ is known and separated inhomogeneity $\lambda$ follows a log-linear model
+\begin{equation}
+	\label{eq:logLinearIntensity}
+	\lambda (t; \bm{\beta}) = \exp \left( \sum_{h=0}^{H} \beta_h \varphi_h (t) \right), \qquad \forall t \geq 0,
+\end{equation}
+where $\varphi_h: \Rplus \to \R$ is given continuous function for $h = 0, ..., H$ and $\bm{\beta} = (\beta_0, ..., \beta_H)$ is vector of unknown parameters. Usually, we take $\varphi_0 = 1$ and call $\beta_0$ an intercept. The derivative of separated inhomogeneity with respect to parameter vector is
+\[
+	\frac{\partial \lambda (t; \bm{\beta})}{\partial \bm{\beta}} = \lambda (t; \bm{\beta}) \T{(\varphi_0 (t), ..., \varphi_H (t))} \equiv \lambda (t; \bm{\beta}) \bm{\varphi} (t).
+\]
+
+We can adjust the likelihood function~\eqref{eq:generalLik} for this particular case and calculate log-likelihood function
+\begin{multline*}
+	\ell_n (\bm{\beta})
+	= \sum_{\nu=1}^n \Biggl[ \log( p_{Y_0^{\nu}}) +
+	\sum_{k=1}^{K^{\nu}} \bigg[ \log(\gamma\indexij) + \T{\bm{\beta}} \bm{\varphi} (T_k^{\nu}) - \\
+	- \gamma\indexi \int_{T_{k-1}^{\nu}}^{T_k^{\nu}} \lambda(t; \bm{\beta}) dt \bigg] -
+	\gamma_{Y_{K^{\nu}}^{\nu}} \int_{T_{K^{\nu}}^{\nu}}^{T} \lambda(t; \bm{\beta}) dt \Biggr],
+\end{multline*}
+the score statistic
+\begin{multline*}
+	\m{U}_n (\bm{\beta})
+	= \sum_{\nu=1}^n \Biggl[ \sum_{k=1}^{K^{\nu}} \bigg[ \bm{\varphi} (T_k^{\nu}) -
+	\gamma\indexi \int_{T_{k-1}^{\nu}}^{T_k^{\nu}} \lambda(t; \bm{\beta}) \bm{\varphi} (t) dt \bigg] - \\
+	- \gamma_{Y_{K^{\nu}}^{\nu}} \int_{T_{K^{\nu}}^{\nu}}^{T} \lambda(t; \bm{\beta}) \bm{\varphi} (t) dt \Biggr],
+\end{multline*}
+	and the observed information matrix
+\begin{multline*}
+	\m{I}_n (\bm{\beta})
+	= \frac{1}{n} \sum_{\nu=1}^n \Biggl[ \sum_{k=1}^{K^{\nu}}
+	\gamma\indexi \int_{T_{k-1}^{\nu}}^{T_k^{\nu}} \lambda(t; \bm{\beta}) \bm{\Omega} (t) dt
+	+ \gamma_{Y_{K^{\nu}}^{\nu}} \int_{T_{K^{\nu}}^{\nu}}^{T} \lambda(t; \bm{\beta}) \bm{\Omega} (t) dt \Biggr],
+\end{multline*}
+where	$\bm{\Omega} (t) = \bm{\varphi} (t) \T{(\bm{\varphi} (t))}$ for all $t \geq 0$.
+
+It is not possible to solve the system of equations $\m{U}_n (\bm{\beta}) = \bm{0}$ directly and one needs to use the Newton-Raphson iterative method to find the MLE $\hat{\bm{\beta}}_n$.
+
+\begin{example}[Testing homogeneity of Poisson Process]
+	While testing homogeneity of Poisson process, we are interested in test of null hypothesis $H_0$ against alternative hypothesis $H_1$, where
+	\begin{align*}
+		H_0 &: \forall s,t \in [0,T] : \lambda(s) = \lambda(t), \\
+		H_1 &: \exists s,t \in [0,T] : \lambda(s) \neq \lambda(t).
+	\end{align*}
+	This hypothesis is hard to test. Instead of that, we will provide a weaker test in model~(\ref{eq:logLinearIntensity})
+		\begin{align*}
+			H_0 &: \beta_1 = ... = \beta_H = 0 \\
+			H_1 &: \exists h \in \{1, ..., H\} : \beta_h \neq 0.
+	\end{align*}
+	Denote the vector parameter under null hypothesis by $\bm{\beta}_0 = (\beta_{0,0}, 0, ..., 0)^{\top}$, where $\beta_{0,0} \in \R$ is nuisance parameter. The intensity under null hypothesis is $\lambda(t, \bm{\beta}_0) = \e^{\beta_{0,0}}$. The MLE of $\beta_{0,0}$ under null hypothesis is $\tilde{\beta}_{0,n} = \log (\frac{1}{n} \sum_{\nu = 1}^n X_T^{\nu})$.
+	
+	We already know (from Chapter~\ref{chap:poisson}) that inhomogeneous Poisson process is inhomogeneous Markov process with unit constant rate from state $i$ to $i+1$, where $i \in \N_0$, i.e. $\gamma_{i} = \gamma_{i,i+1} = 1$ for each $i \in S$. 
+	
+	The score statistic is simplified into
+	\[
+		\m{U}_n (\bm{\beta})
+		= \sum_{\nu=1}^n \sum_{k=1}^{K^{\nu}} \bm{\varphi} (T_k^{\nu})
+		- n\int_{0}^{T} \lambda(t; \bm{\beta}) \bm{\varphi} (t) dt.
+	\]
+		The observed information matrix does not depend on the data and, therefore, is equal to Fisher information matrix, i.e. 
+	\[
+		\m{I}_n (\bm{\beta}) =
+		\int_{0}^{T} \lambda(t; \bm{\beta}) \bm{\Omega} (t) dt = 
+		\m{I} (\bm{\beta}).
+	\]
+	
+		Without loss of generality assume $T = 1$. Suppose the model is given by $\varphi_h (t) = t^h$. Then the matrix $\bm{\Omega} (t)$ at position $i,j$ is equal to $t^{i+j-2}$ and the respective position of Fisher information matrix $\m{I} (\bm{\beta}_0)$ is (if the null hypothesis holds)
+		\[
+			\int_0^1 \e^{\beta_{0,0}} t^{i+j-2} dt = \frac{\e^{\beta_{0,0}}}{i+j-1}.
+		\]
+		Since $\tilde{\bm{\beta}}_n = (\tilde{\beta}_{0,n}, 0, ..., 0)^{\top}$ is consistent estimate of $\bm{\beta}_0$ under null hypothesis, also the matrix
+		\[
+			\m{I} (\tilde{\bm{\beta}}_n) = \left\{ \frac{\sum_{\nu = 1}^n X_T^{\nu}}{n (i+j-1)}, i,j = 1, ..., H+1 \right\}
+		\]
+		is consistent estimate of $\m{I} (\bm{\beta}_0)$. The Rao score statistic is		
+		\[
+			R_n = \frac{1}{\sum_{\nu = 1}^n X_T^{\nu}} \m{U}_{-1,n} (\tilde{\bm{\beta}}_n) ^{\top} \left[ [ \mathcal{H}_{H+1} ]^{-1} \right]_{-1,-1} \m{U}_{-1,n} (\tilde{\bm{\beta}}_n),
+		\]
+		where $\m{U}_{-1,n} (\bm{\beta})$ is the score function at point $\tilde{\bm{\beta}}_n$ where the first element is excluded and $\mathcal{H}_k$ is the $k \times k$ Hilbert matrix. By notation $A_{-i,-j}$ we indicate the matrix $A$ without $i$-th row and $j$-th column excluded. 
+		The statistic has (under null hypothesis) $\chi^2$ distribution with $H$ degrees of freedom so one can reject the  null hypothesis if $R_n \geq \chi_H^2(1-\alpha)$.
+		
+		Note that we are able to calculate the Rao score statistic without calculating the MLE of $\bm{\beta}$ (without assumption that the null hypothesis holds).
+		
+	\demo
+\end{example}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Constant Rate Matrix}
+
+Suppose that the separated inhomogeneity function $\lambda$ is known and we are interested in estimating the constant rate matrix $\bm{\Gamma} = \bm{\Gamma} (\bm{\theta})$. By Proposition \ref{prop:separable}, we are able to find a homogeneous transformation of the process $\m{X}$. Then, we can use this homogeneous transformation and results from Chapter~\ref{chap:statSeparInhom} to estimate the parameter $\bm{\theta}$.
+
+If also the separated inhomogeneity were unknown, we cannot find the homogeneous transformation and we need to estimate it along with the constant rate matrix. Suppose that the vector parameter is divided into $(\bm{\beta}^{\top}, \bm{\theta}^{\top})^{\top}$, where $\bm{\beta} \in \R^{H_1}$, $\bm{\theta} \in \R^{H_2}$, and $H_1 + H_2 = H$. Further suppose that function $\lambda = \lambda (\bm{\beta})$ follows log-linear model similar to Chapter~\ref{chap:statSeparInhom} and matrix $\bm{\Gamma} = \bm{\Gamma} (\bm{\theta})$ has similar parametrization as in Chapter~\ref{chap:statHomo}.
+
+Note that we do not need to keep the intercept in the log-linear term in most of reliable models. If for each $\bm{\theta} \in \Theta$ and $c > 0$ there exists $\bm{\theta}^{'} \in \Theta$ such that $\bm{\Gamma} (\bm{\theta}^{'}) = c \bm{\Gamma} ( \bm{\theta} )$, then it is easier to set $c = \e^{\beta_0} = 1$, i.e. the intercept $\beta_0 = 0$ needs not be included in the model.
+
+The log-likelihood function
+\begin{multline*}
+	\ell_n (\bm{\beta}, \bm{\theta})
+	= \sum_{\nu=1}^n \Biggl[ \log( p_{Y_0^{\nu}}) +
+	\sum_{k=1}^{K^{\nu}} \bigg[ \log(\gamma\indexij (\bm{\theta})) + \T{\bm{\beta}} \bm{\varphi} (T_k^{\nu}) - \\
+	- \gamma\indexi (\bm{\theta}) \int_{T_{k-1}^{\nu}}^{T_k^{\nu}} \lambda(t; \bm{\beta}) dt \bigg] -
+	\gamma_{Y_{K^{\nu}}^{\nu}} (\bm{\theta}) \int_{T_{K^{\nu}}^{\nu}}^{T} \lambda(t; \bm{\beta}) dt \Biggr]
+\end{multline*}
+is again hard to work with without any assumption about the constant intensity rate $\bm{\Gamma} (\bm{\theta})$. Instead of deriving other statistics in general, we show one example of such model.
+
+\begin{example}[Independent queuing systems]
+	Suppose that there exist $H_2$ independent queuing systems for which the arrivals follow inhomogeneous processes. Further suppose that the queuing systems are mutually independent and the intensities of individual systems differs only in scale. Denote by $\lambda_h (t; \bm{\beta})$ the intensity of $h$-th system at time $t$ for $h = 1, ..., H_2$. Then the ratio $\lambda_h (t; \bm{\beta}) / \lambda_h (s; \bm{\beta})$ does not depend on the system $h$ for any $s,t \geq 0$ such that $\lambda_h (s; \bm{\beta}) > 0$. One reliable model for intensities could be
+	\begin{equation*}
+		\lambda_h (t; \bm{\beta}, \bm{\theta}) = \theta_h \exp \left( \sum_{h=1}^{H} \beta_h \varphi_h (t) \right), \qquad \forall t \geq 0, h=1,...,H_2.
+	\end{equation*}
+	
+	Denote by $(i,j) \sim h$ the fact that that the transition from $i$ to $j$ is equivalent to one arrival in system $h$. Now, we can write the constant intensities as
+	\[
+		\gamma_{i,j} (\bm{\theta})= \sum_{h=1}^{H_2} \theta_h \mathbb{I} [(i,j) \sim h]
+	\]
+	and their derivations are $\partial \gamma_{i,j} (\bm{\theta}) / \partial \theta_h = \mathbb{I} [(i,j) \sim h]$. For each state $i \in S$ and system $h = 1, ..., H_2$ there exist exactly one state $j \in S$ such that $(i,j) \sim h$. Therefore, the total constant intensities are $\gamma_{i} (\bm{\theta})= \sum_{h=1}^{H_2} \theta_h \equiv s(\bm{\theta})$ for all $i \in S$.
+	
+	The first and the second derivatives of log-likelihood function with respect to vector parameters $\bm{\beta}$ and $\bm{\theta}$ are
+	\begin{align*}
+		\frac{\partial \ell_n (\bm{\beta}, \bm{\theta})}{\partial \bm{\beta}} &=
+		\sum_{\nu=1}^n \sum_{k=1}^{K^{\nu}} \bm{\varphi} (T_k^{\nu}) 
+		- n s(\bm{\theta}) \int_{T_{K^{\nu}}^{\nu}}^{T} \lambda(t; \bm{\beta}) \bm{\varphi} (t) dt,
+		\\
+				\frac{\partial \ell_n (\bm{\beta}, \bm{\theta})}{\partial \theta_h}
+		&= \frac{1}{\theta_h} \sum_{\nu=1}^n
+		\sum_{k=1}^{K^{\nu}} \mathbb{I} [(Y_{k-1}^{\nu}, Y_{k}^{\nu}) \sim h] -
+		 n \int_{0}^{T} \lambda(t; \bm{\beta}) dt,
+		\\
+		\frac{\partial^2 \ell_n (\bm{\beta}, \bm{\theta})}{\partial \bm{\beta} \partial \bm{\beta}^{\top}}
+		&= - n s(\bm{\theta}) \int_{0}^{T} \lambda(t; \bm{\beta}) \bm{\Omega} (t) dt.
+		\\
+		\frac{\partial^2 \ell_n (\bm{\beta}, \bm{\theta})}{\partial \bm{\beta} \partial \theta_h}
+		&= - n \int_{0}^{T} \lambda(t; \bm{\beta}) \bm{\varphi} (t) dt,
+		\\
+		\frac{\partial^2 \ell_n (\bm{\beta}, \bm{\theta})}{\partial \theta_{h_1} \partial \theta_{h_2}}
+		&= \frac{-1}{\theta_h_1^2} \sum_{\nu=1}^n
+		\sum_{k=1}^{K^{\nu}} \mathbb{I} [(Y_{k-1}^{\nu}, Y_{k}^{\nu}) \sim h_1]
+			\times \mathbb{I} [h_1 = h_2],
+	\end{align*}
+	
+	Denote by $N_{n,h} = \sum_{\nu=1}^n \sum_{k=1}^{K^{\nu}} \mathbb{I} [(Y_{k-1}^{\nu}, Y_{k}^{\nu}) \sim h]$ the total number of arrivals in all observations of system $h$. Then we have the score function	
+	\[
+		\m{U}_n (\bm{\beta}, \bm{\theta}) = 
+			\left(
+			\begin{array}{c}
+				\sum_{\nu=1}^n \sum_{k=1}^{K^{\nu}} \bm{\varphi} (T_k^{\nu})
+				- n s(\bm{\theta}) \int_{T_{K^{\nu}}^{\nu}}^{T} \lambda(t; \bm{\beta}) \bm{\varphi} (t) dt
+				\\
+				\displaystyle{\frac{N_{n,1}}{\theta_1}} \sum_{\nu=1}^n -
+				n \int_{0}^{T} \lambda(t; \bm{\beta}) dt
+				\\
+				\vdots
+				\\
+				\displaystyle{\frac{N_{n,H_2}}{\theta_{H_2}}} \sum_{\nu=1}^n -
+				n \int_{0}^{T} \lambda(t; \bm{\beta}) dt
+			\end{array}
+			\right)
+	\]
+and the observed information matrix
+	\[
+		\m{I}_n (\bm{\beta}, \bm{\theta}) = 
+			\left(
+			\begin{array}{cc}
+				s(\bm{\theta}) \int_{0}^{T} \lambda(t; \bm{\beta}) \bm{\Omega} (t) dt & \m{D}_{\bm{\theta}, \bm{\beta}}^{\top} \\
+				\m{D}_{\bm{\theta}, \bm{\beta}}						                    & \m{D}_{\bm{\theta}, \bm{\theta}}
+			\end{array}
+			\right),
+	\]
+	where
+	\[
+		\m{D}_{\bm{\theta}, \bm{\beta}} = 
+			\left(
+			\begin{array}{c}
+				\int_{0}^{T} \lambda(t; \bm{\beta}) \bm{\varphi} (t)^{\top} dt \\
+				\vdots \\
+				\int_{0}^{T} \lambda(t; \bm{\beta}) \bm{\varphi} (t)^{\top} dt
+			\end{array}
+			\right),
+		\qquad
+		\m{D}_{\bm{\theta}, \bm{\theta}} = 
+			\left(
+			\begin{array}{ccc}
+				\frac{N_{n,1}}{n \theta_1^2} & & 0 \\
+				& \ddots & \\
+				0 & & \frac{N_{n,H_2}}{n \theta_1^2}
+			\end{array}
+			\right)
+	\]
+	are matrices of dimensions $H_2 \times H_1$ and $H_2 \times H_2$, respectively.
+	
+	The MLE of $(\bm{\beta}^{\top}, \bm{\theta}^{\top})^{\top}$ can be found using the Newton-Rhapson algorithm.
+
+
+
+	\demo
+\end{example}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{General Markov Process}
+	\label{chap:generalMarkov}
+
+In the most general case, we suppose that each transition intensity follows a log-linear model. However, we do not assume any relations between individual intensities as we did in previous chapters.
+
+Let $\mathcal{I} = \{1, ..., H \}$ be an index set with subsets $\mathcal{I}_{ij} \subset \mathcal{I}$ for $i,j \in S$, $i \neq j$. Let $\varphi_h: \Rplus \to \R$ be real functions for each $h \in \mathcal{I}$. Assume that the intensity of transition from state $i \in S$ to state $j \in S \setminus \{i\}$ at time $t \geq 0$ are
+\[
+	q_{ij} (t; \bm{\beta}) = \left\{
+                \begin{array}{ll}
+                  \exp \left( \sum_{h \in \mathcal{I}_{ij}} \beta_h \varphi_h (t) \right) & \left| \mathcal{I}_{ij} \right| > 0 \\
+                  0 & \text{else}
+                \end{array}
+              \right
+\]
+where $\bm{\beta} = (\beta_1, ..., \beta_H)^{\top} \in \R^H$ is unknown parameter. We do not assume that the subsets $\{ \mathcal{I}_{ij}; i,j \in S, i \neq j \}$ are mutually disjoint. Let us use the vector notation for the functions $\bm{\varphi} (t) = (\varphi_1 (t), ..., \varphi_H (t))^{\top}$.
+
+The log-likelihood function can be written as
+\begin{multline*}
+	\ell_n (\bm{\beta}) =
+	\sum_{\nu=1}^n \Biggl[ \log (p_{Y_0}) +
+	\sum_{k=1}^{K^{\nu}} \left[ \log (q\indexij (T_k^{\nu}; \mathbf{ \bm{\beta} })) - \int_{T_{k-1}^{\nu}}^{T_{k}^{\nu}} q\indexi(t; \bm{\beta}) dt \right]
+	%\sum_{k=1}^{K^{\nu}} \left[ \sum_{h \in \mathcal{I}\indexij} \beta_h \varphi_h (t) - \int_{T_{k-1}^{\nu}}^{T_{k}^{\nu}} q\indexi(t; \bm{\theta}) dt \right]
+	\\
+	- \int_{T_{K^{\nu}}^{\nu}}^{T} q_{Y_{K^{\nu}}^{\nu}}(t; \bm{\beta}) dt \Biggr].
+\end{multline*}
+Let us begin with the derivatives of individual terms:
+\begin{align*}
+	\frac{\partial \log (q_{ij} (t; \mathbf{ \bm{\beta} }))}{\partial \beta_h} &=
+	\varphi_h (t)
+	\mathbb{I} [h \in \mathcal{I}_{ij}]
+	\\
+	\frac{\partial^2 \log (q_{ij} (t; \mathbf{ \bm{\beta} }))}{\partial \beta_{h_1} \partial \beta_{h_2}} &=
+	0
+	\\
+	\frac{\partial q_{i} (t; \mathbf{ \bm{\beta} })}{\partial \beta_h} &=
+	\sum_{j \in S \setminus \{i\}} \varphi_h (t) q_{ij} (t; \mathbf{ \bm{\beta} })
+	\mathbb{I} [h \in \mathcal{I}_{ij}]
+	\\
+	\frac{\partial^2 q_{i} (t; \mathbf{ \bm{\beta} })}{\partial \beta_{h_1} \partial \beta_{h_2}} &=
+	\sum_{j \in S \setminus \{i\}} \varphi_{h_1} (t) \varphi_{h_2} (t) q_{ij} (t; \mathbf{ \bm{\beta} })
+	\mathbb{I} [h_1, h_2 \in \mathcal{I}_{ij}]
+\end{align*}
+The $h$-th element of the score function is given by
+\begin{multline}
+	\label{eq:finalU}
+	\m{U}_{n,h} (\bm{\beta}) =
+	\sum_{\nu=1}^n \Biggl[
+	\sum_{k=1}^{K^{\nu}} \varphi_h (T_k^{\nu})	\mathbb{I} [h \in \mathcal{I}\indexij] -
+	\\
+	\sum_{k=1}^{K^{\nu}} 
+	\sum_{j \in S \setminus \{Y^\nu_{k-1}\}} \mathbb{I} [h \in \mathcal{I}\indexi_j]
+	\int_{T_{k-1}^{\nu}}^{T_{k}^{\nu}}
+	\varphi_h (t) q\indexi_j (t; \mathbf{ \bm{\beta} }) dt
+	\\ -
+	\sum_{j \in S \setminus \{Y^\nu_{K^{\nu}}\}} \mathbb{I} [h \in \mathcal{I}_{Y^{\nu}_{K^{\nu}}j}]
+	\int_{T_{K^{\nu}}^{\nu}}^{T}
+	\varphi_h (t) q_{Y_{K^{\nu}}^{\nu} j} (t; \bm{\beta}) dt
+	\Biggr].
+\end{multline}
+The element of the observed information matrix in row $h_1$ and column $h_2$ is given by
+\begin{multline}
+	\label{eq:finalI}
+	\m{I}_{n,h_1,h_2} (\bm{\beta}) =
+	\frac{1}{n}
+	\sum_{\nu=1}^n \Biggl[
+	\sum_{k=1}^{K^{\nu}} 
+	\sum_{j \in S \setminus \{Y^\nu_{k-1}\}} \mathbb{I} [h \in \mathcal{I}\indexi_j]
+	\int_{T_{k-1}^{\nu}}^{T_{k}^{\nu}}
+	\varphi_{h_1} (t) \varphi_{h_2} (t) q\indexi_j (t; \mathbf{ \bm{\beta} }) dt
+	\\ +
+	\sum_{j \in S \setminus \{Y^\nu_{K^{\nu}}\}} \mathbb{I} [h \in \mathcal{I}_{Y^{\nu}_{K^{\nu}}j}]
+	\int_{T_{K^{\nu}}^{\nu}}^{T}
+	\varphi_{h_1} (t) \varphi_{h_2} (t) q_{Y_{K^{\nu}}^{\nu} j} (t; \bm{\beta}) dt
+	\Biggr].
+\end{multline}
+
+The MLE of vector parameter $\bm{\beta}$ may be estimated using Newton-Raphson method.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Regression Model}
+
+In the last part of this chapter, we introduce a model that allows dependence of the Markov Process on other variables. Suppose we observe a piecewise constant and right-continuous function (covariate) $\m{z}: \Rplus \to \R^M$ along with each process.
+
+Further let function $\bm{\varphi}: \Rplus \times \R^M \to \R^H$ depend both on time and the covariate. Denote the vector function by $\bm{\varphi} (t, \m{z} (t))$. We keep the assumptions from Chapter~\ref{chap:generalMarkov} and modify only the definition of intensities
+\[
+	q_{ij} (t, \m{z} (t); \bm{\beta}) = \left\{
+                \begin{array}{ll}
+                  \exp \left( \sum_{h \in \mathcal{I}_{ij}} \beta_h \varphi_h (t, \m{z} (t)) \right) & \left| \mathcal{I}_{ij} \right| > 0 \\
+                  0 & \text{else}.
+                \end{array}
+              \right
+\]
+All the results from Chapter~\ref{chap:generalMarkov} hold. One only needs to add an argument $\m{z}^{\nu} (t)$ to functions $q_i$, $q_{ij}$, and $\varphi_h$ in formulas for the log-likelihood function, the score function, and the observed information matrix. The function $\m{z}^{\nu} (t)$ denotes the observed covariate of the process $\m{X}^{\nu}$.
+
+
+
+
+
+
+
+
+
