@@ -4,7 +4,13 @@ Title: What the Package Does (Title Case)
 Version: 0.1.0
 Author: Jan Kislinger
 Maintainer: Jan Kislinger <jan.kislinger@gmail.com>
-Depends: foreach, magrittr, dplyr
+Depends:
+    foreach,
+    magrittr,
+    dplyr
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 LazyData: TRUE
+Suggests:
+    testthat
+RoxygenNote: 5.0.1
