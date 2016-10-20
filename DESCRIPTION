@@ -1,13 +1,13 @@
-Package: dynamicFare
+Package: dynFare
 Type: Package
 Title: What the Package Does (Title Case)
 Version: 0.1.0
 Author: Jan Kislinger
 Maintainer: Jan Kislinger <jan.kislinger@gmail.com>
 Depends:
+    dplyr,
     foreach,
-    magrittr,
-    dplyr
+    magrittr
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 LazyData: TRUE
