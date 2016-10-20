@@ -52,6 +52,3 @@ simulate_poisson_process <- function(model, beta, price, from, to) {
 relative_cumsum <- function(x, total = 1) {
   cumsum(x)[-length(x)] / sum(x) * total
 }
-
-simulate_poisson_process(model = 1, beta = c(18,-4,4, 1.2), price = 250,
-                         from = 0, to = 1)
