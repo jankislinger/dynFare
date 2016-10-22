@@ -4,9 +4,8 @@
 #' Simulates demand for whole train over given time interval as an inhomogeneous
 #' Markov process (combination of multiple Poisson processes).
 #' 
+#' @param routes Output of \link{get_routes}. Do not build this argument manually.
 #' @param model Model selection; either 1 or 2. See details.
-#' @param routes Numeric matrix containing information about the routes. Each row represents one route.
-#'               The order of routes needs to be the same in all arguments. See examples.
 #' @param beta Numeric matrix of model parameters. Each row contains parameters for one route.
 #'             The number of columns corresponds with the model selection. See details.
 #' @param price Vector of ticket prices. Each element represents one route.
@@ -37,7 +36,7 @@
 #' @export
 
 
-simulate_all_routes <- function(model, routes, beta, price, from, to, nseats, init_occupancy) {
+simulate_all_routes <- function(routes, model, beta, price, from, to, nseats, init_occupancy) {
 
   ## set maximal from and to values for time
   from <- pmin(from, routes[,'dep_daytime'])
