@@ -1,36 +1,4 @@
 
-# set dimension names to array --------------------------------------------
-
-setDimnames <- function(array, dimnames) {
-  dimnames(array) <- dimnames
-  array
-}
-
-
-# set column names to matrix ----------------------------------------------
-
-setColnames <- function(matrix, colnames) {
-  colnames(matrix) <- colnames
-  matrix
-}
-
-
-# relative cumulative sums ------------------------------------------------
-
-
-
-# get routes --------------------------------------------------------------
-
-get_routes <- function(nstations, dep_day, dep_time = NULL) {
-  routes <- combn(nstations, 2) %>% t %>% setColnames(c('from', 'to'))
-  day_time <- cbind(dep_day, dep_time, 1 + (dep_time - 1) / dep_day) %>%
-    set_colnames(c('dep_day', 'dep_time', 'dep_daytime'))
-  occupancy <- apply(routes, 1, function(x) {
-    c(rep(0, x[1]-1), rep(1, diff(x)), rep(0, nstations - x[2]))
-  }) %>% t %>%
-    set_colnames(paste0('occup_', 1:(nstations-1), '_', 2:nstations))
-  cbind(routes, day_time[routes[,'from'],], occupancy)
-}
 
 
 # keep as matrix ----------------------------------------------------------
