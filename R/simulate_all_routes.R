@@ -33,6 +33,8 @@
 #' 
 #' simulate_markov_process(model = 1, routes, beta, price = price,
 #'                         from = 0, to = 1, nseats = 10, init_occupancy)
+#' 
+#' @export
 
 
 simulate_all_routes <- function(model, routes, beta, price, from, to, nseats, init_occupancy) {
