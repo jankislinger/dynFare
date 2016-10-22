@@ -4,14 +4,13 @@
 \alias{simulate_all_routes}
 \title{Simulate demand for whole train}
 \usage{
-simulate_all_routes(model, routes, beta, price, from, to, nseats,
-  init_occupancy)
+simulate_all_routes(routes, model, beta, price, from, to, nseats,
+  init_occupancy, keep_all)
 }
 \arguments{
-\item{model}{Model selection; either 1 or 2. See details.}
+\item{routes}{Output of \link{get_routes}. Do not build this argument manually.}
 
-\item{routes}{Numeric matrix containing information about the routes. Each row represents one route.
-The order of routes needs to be the same in all arguments. See examples.}
+\item{model}{Model selection; either 1 or 2. See details.}
 
 \item{beta}{Numeric matrix of model parameters. Each row contains parameters for one route.
 The number of columns corresponds with the model selection. See details.}
@@ -23,6 +22,8 @@ The number of columns corresponds with the model selection. See details.}
 \item{to}{Upper bound of the time interval over which the process should be simulated.}
 
 \item{init_occupancy}{Occupancy of the train at time \code{from}. Represents state of the Markov process.}
+
+\item{keep_all}{Logical; Should the passengers that exceed the capacity be returned as well?}
 
 \item{nseat}{Number of seats in the train.}
 }
@@ -48,5 +49,6 @@ init_occupancy <- rep(0, 3)
 
 simulate_markov_process(model = 1, routes, beta, price = price,
                         from = 0, to = 1, nseats = 10, init_occupancy)
+
 }
 
