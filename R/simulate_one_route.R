@@ -24,7 +24,7 @@
 #' @export
 
 
-simulate_poisson_process <- function(model, beta, price, from, to) {
+simulate_one_route <- function(model, beta, price, from, to) {
   
   if (! model %in% 1:2)
     warning('Unspecified model: taking model = 1')

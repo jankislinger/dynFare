@@ -35,7 +35,7 @@
 #'                         from = 0, to = 1, nseats = 10, init_occupancy)
 
 
-simulate_markov_process <- function(model, routes, beta, price, from, to, nseats, init_occupancy) {
+simulate_all_routes <- function(model, routes, beta, price, from, to, nseats, init_occupancy) {
 
   ## set maximal from and to values for time
   from <- pmin(from, routes[,'dep_daytime'])
@@ -44,7 +44,7 @@ simulate_markov_process <- function(model, routes, beta, price, from, to, nseats
   ## simulate Poisson process for each route
   tickets <- foreach(i = 1:nrow(routes), .combine = rbind) %do% {
 
-    pois <- simulate_poisson_process(model, beta[i,], price[i], from[i], to[i])
+    pois <- simulate_one_route(model, beta[i,], price[i], from[i], to[i])
 
     if (length(pois) > 0) {
       cbind(route = i, time = pois, count = 1)
