@@ -5,7 +5,7 @@
 #' @docType package
 #' @name dynFare
 #'
-#' @importFrom dplyr 
+#' @importFrom dplyr mutate
 #' @importFrom foreach foreach %do%
 #' @importFrom magrittr %>% %$% %T>% %<>% set_colnames
 
