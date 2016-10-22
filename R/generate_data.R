@@ -1,31 +1,33 @@
-GenerateData <- function(time.bp, price, beta, nstations, ntrains, nseats) {
+#' Generate data
+#' 
+#' @description 
+#' The function generates example data for the statistical model.
+#' 
+#' @param beta Numeric matrix of model parameters. Each row contains parameters for one route.
+#'             The number of columns corresponds with the model selection. See details.
+#' @param price Vector of ticket prices. Each element represents one route.
+#' @param time_bp Vector of times when the price changes. Values between 0 and 1.
+#' @param ntrains Number of datasets to be generated.
+#' @param nstations Number of stations of the train.
+#' @param nseat Number of seats in the train.
+#' 
+#' @return 
+#' List of datasets of simulated tickets.
+#' Each element represents one train.
+#' 
+#' @examples
+#' beta <- matrix(rep(c(18,-4,4, 1.2), each = 6), nrow = 6)
+#' price <- matrix(250, 2, 6)
+#' generate_data <- function(beta, price, time_bp = 0.5, ntrains = 3, nstations = 4, nseats = 20)
+#' 
+#' @export
 
-  ndays <- 60
-  routes <- getRoutes(nstations, ndays, c(0.3, 0.4, 0.5))
+generate_data <- function(beta, price, time_bp, ntrains, nstations, nseats) {
 
-  ## loop through
-  foreach(j = 1:ntrains) %do% {
+  dep_day <- 60
+  routes <- get_routes(nstations, dep_day, seq(0.3, 0.5, length.out = nstations - 1))
 
-    ## set initial values for reward and occupancy
-    total.reward <- 0
-    actual.occupancy <- rep(0, nstations - 1)
-
-    ## loop through all time intervals
-    foreach(i = 1:(length(time.bp) - 1), .combine = rbind) %do% {
-
-      ## get i-th time interval
-      from <- time.bp[i]
-      to   <- time.bp[i+1]
-
-      ## simulate demand
-      mc <- SimulateMarkovProcess(1, routes, beta, price, from, to, nseats, actual.occupancy)
-
-      ## change reward and occupancy based on simulated data
-      total.reward <- total.reward + mc$reward
-      actual.occupancy <- unname(mc$occupancy)
-
-      ## return df with tickets (to be rbinded)
-      mc$tickets
-    }
+  foreach(j = seq(ntrains)) %do% {
+    simulate_train_demand(routes, 1, beta, price, time_bp, nseats, F)$tickets
   }
 }
