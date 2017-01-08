@@ -24,7 +24,7 @@
 #' @export
 
 
-simulate_one_route <- function(model, beta, price, from, to) {
+simulate_one_route <- function(model, beta, price, from, to, nseats, keep_all) {
   
   if (! model %in% 1:2)
     warning('Unspecified model: taking model = 1')
@@ -45,7 +45,13 @@ simulate_one_route <- function(model, beta, price, from, to) {
   ## get total cumulative intensity for selected interval and simulate number of tickets
   Lambda <- .Lambda(from, to)
   N <- rpois(1, Lambda)
-  rexp(N+1) %>% relative_cumsum(Lambda) %>% .LambdaInv(from)
+  t <- rexp(N+1) %>% relative_cumsum(Lambda)
+  
+  if (!keep_all && N > nseats) {
+    .LambdaInv(t[seq_len(nseats)], from)
+  } else {
+    .LambdaInv(t, from)
+  }
 }
 
 

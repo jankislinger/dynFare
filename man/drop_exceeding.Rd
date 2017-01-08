@@ -4,7 +4,7 @@
 \alias{drop_exceeding}
 \title{Drop exceeding passengers}
 \usage{
-drop_exceeding(tickets, occupancy, nseats)
+drop_exceeding(tickets, init_occupancy, nseats, routes)
 }
 \arguments{
 \item{tickets}{Matrix containing information about the tickets.}

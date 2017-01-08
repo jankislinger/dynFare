@@ -22,12 +22,14 @@
 #' 
 #' @export
 
-generate_data <- function(beta, price, time_bp, ntrains, nstations, nseats) {
+generate_data <- function(beta, price, time_bp, ntrains, nstations, nseats, keep_all = F) {
 
   dep_day <- 60
   routes <- get_routes(nstations, dep_day, seq(0.3, 0.5, length.out = nstations - 1))
+  
 
-  foreach(j = seq(ntrains)) %do% {
-    simulate_train_demand(routes, 1, beta, price, time_bp, nseats, F)$tickets
+  foreach(j = seq(ntrains), .combine = rbind) %do% {
+    single <- simulate_train_demand(routes, 1, beta, price, time_bp, nseats, keep_all)$tickets
+    cbind(train = j, single) %>% as.data.frame()
   }
 }

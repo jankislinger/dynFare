@@ -5,9 +5,13 @@ Version: 0.1.0
 Author: Jan Kislinger
 Maintainer: Jan Kislinger <jan.kislinger@gmail.com>
 Depends:
-    dplyr,
+    magrittr,
+    tidyverse
+Imports:
+    data.table,
     foreach,
-    magrittr
+    mvtnorm,
+    plyr
 Description: More about what it does (maybe more than one line)
 License: What license is it under?
 LazyData: TRUE

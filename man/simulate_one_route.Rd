@@ -4,7 +4,7 @@
 \alias{simulate_one_route}
 \title{Simulate demand for single route}
 \usage{
-simulate_one_route(model, beta, price, from, to)
+simulate_one_route(model, beta, price, from, to, nseats, keep_all)
 }
 \arguments{
 \item{model}{Model selection; either 1 or 2. See details.}

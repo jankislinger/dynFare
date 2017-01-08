@@ -47,8 +47,8 @@ beta           <- matrix(rep(c(18,-4,4, 1.2), each = 6), nrow = 6)
 price          <- rep(250, 6)
 init_occupancy <- rep(0, 3)
 
-simulate_markov_process(model = 1, routes, beta, price = price,
-                        from = 0, to = 1, nseats = 10, init_occupancy)
+simulate_all_routes(model = 1, routes, beta, price = price,
+                    from = 0, to = 1, nseats = 10, init_occupancy)
 
 }
 

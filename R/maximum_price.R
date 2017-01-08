@@ -10,6 +10,6 @@
 #' @export
 
 maximum_price <- function(beta, price, time) {
-  
+  warning('Dummy function "maximum_price".')
   price + runif(length(time), max = 50)
 }

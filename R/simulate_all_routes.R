@@ -31,8 +31,8 @@
 #' price          <- rep(250, 6)
 #' init_occupancy <- rep(0, 3)
 #' 
-#' simulate_markov_process(model = 1, routes, beta, price = price,
-#'                         from = 0, to = 1, nseats = 10, init_occupancy)
+#' simulate_all_routes(model = 1, routes, beta, price = price,
+#'                     from = 0, to = 1, nseats = 10, init_occupancy)
 #' 
 #' @export
 
@@ -46,7 +46,7 @@ simulate_all_routes <- function(routes, model, beta, price, from, to, nseats, in
   ## simulate Poisson process for each route
   tickets <- foreach(i = 1:nrow(routes), .combine = rbind) %do% {
 
-    pois <- simulate_one_route(model, beta[i,], price[i], from[i], to[i])
+    pois <- simulate_one_route(model, beta[i,], price[i], from[i], to[i], nseats, keep_all)
 
     if (length(pois) > 0 && keep_all) {
       cbind(route = i, time = pois, count = 1, price = price[i]) %>% 
@@ -72,6 +72,10 @@ simulate_all_routes <- function(routes, model, beta, price, from, to, nseats, in
 
   ## bind route information to each ticket
   tickets %<>% cbind(routes[tickets[,'route'], c('from', 'to'), drop = F])
+  
+  if (!keep_all) {
+    tickets <- drop_exceeding(tickets, init_occupancy, nseats, routes)
+  }
 
   ## calculate cumulated occupancy
   occupancy <- routes[tickets[, 'route'], grepl('^occup.*', colnames(routes)), drop = F] %>%
@@ -79,14 +83,12 @@ simulate_all_routes <- function(routes, model, beta, price, from, to, nseats, in
     apply(2, cumsum) %>%
     KeepAsMatrix() %>%
     sweep(2, init_occupancy, '+')
-
-  out <- if (keep_all) {
-    list(tickets = tickets, occupancy = occupancy[nrow(occupancy),])
-  } else {
-    drop_exceeding(tickets, occupancy, nseats)
-  }
-  out$reward <- price[out$tickets[,'route']] %*% out$tickets[,'count'] %>% drop()
-  return(out)
+  
+  list(
+    tickets = tickets,
+    occupancy = occupancy_by_passengers(tickets, init_occupancy, routes) %>% tail(1),
+    reward = price[tickets[,'route']] %*% tickets[,'count'] %>% drop()
+  )
 }
 
 
@@ -101,24 +103,36 @@ simulate_all_routes <- function(routes, model, beta, price, from, to, nseats, in
 #' 
 #' @export
 
-drop_exceeding <- function(tickets, occupancy, nseats) {
+drop_exceeding <- function(tickets, init_occupancy, nseats, routes) {
 
+  occupancy <- occupancy_by_passengers(tickets, init_occupancy, routes)
+  
   ## if the train did not exceed its capacity return all tickets
-  if (nrow(occupancy) == 0 || max(occupancy) <= nseats) {
-    return(list(tickets = tickets, occupancy = occupancy[nrow(occupancy),]))
+  if (occupancy %>% tail(1) %>% max() %>% is_weakly_less_than(nseats)) {
+    return(tickets)
   }
 
   ## find the first passenger (ticket) that exceeds the capacity
-  which.exceed <- apply(occupancy > nseats, 1, any) %>% which %>% first
+  which_exceed <- apply(occupancy > nseats, 1, any) %>% which() %>% first()
 
   ## if the exceeding passenger is the last one then return all except the exceeding one
-  if (which.exceed == nrow(tickets)) {
-    return(list(tickets = tickets[-which.exceed,, drop = F], occupancy = occupancy[which.exceed - 1,]))
+  if (which_exceed == nrow(tickets)) {
+    return(tickets[-which_exceed,, drop = F])
   }
 
-  which.drop <- (tickets[which.exceed, 'from'] < tickets[(which.exceed + 1):nrow(tickets), 'to'] |
-    tickets[which.exceed, 'to'] < tickets[(which.exceed + 1):nrow(tickets), 'from']) %>%
-    which %>% c(0) + which.exceed
+  which_drop <- (tickets[which_exceed, 'from'] >= tickets[(which_exceed + 1):nrow(tickets), 'from'] &
+    tickets[which_exceed, 'to'] <= tickets[(which_exceed + 1):nrow(tickets), 'to']) %>%
+    which %>% c(0) + which_exceed
 
-  drop_exceeding(tickets[-which.drop,, drop = F], occupancy[-which.drop,, drop = F], nseats)
+  drop_exceeding(tickets[-which_drop,, drop = F], init_occupancy, nseats, routes)
+}
+
+occupancy_by_passengers <- function(tickets, init_occupancy, routes) {
+  env <<- environment()
+  routes[tickets[, 'route'], grepl('^occup.*', colnames(routes)), drop = F] %>%
+    sweep(1, tickets[,'count'], '*') %>%
+    apply(2, cumsum) %>%
+    KeepAsMatrix() %T>%
+    assign(x = 'occup_temp', envir = .GlobalEnv) %>% 
+    sweep(2, init_occupancy, '+')
 }

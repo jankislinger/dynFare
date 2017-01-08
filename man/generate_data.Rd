@@ -4,7 +4,7 @@
 \alias{generate_data}
 \title{Generate data}
 \usage{
-generate_data(beta, price, time_bp, ntrains, nstations, nseats)
+generate_data(beta, price, time_bp, ntrains, nstations, nseats, keep_all = F)
 }
 \arguments{
 \item{beta}{Numeric matrix of model parameters. Each row contains parameters for one route.

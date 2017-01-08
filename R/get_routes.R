@@ -15,8 +15,13 @@
 #' Length of vector \code{dep_time} is \code{nstation - 1}.
 #' 
 #' @export
+#' 
+#' @examples
+#' nstations <- 4
+#' dep_day <- 60
+#' routes <- get_routes(nstations, dep_day)
 
-get_routes <- function(nstations, dep_day, dep_time = NULL) {
+get_routes <- function(nstations, dep_day, dep_time = seq(0, 1 - 1 / nstations, length.out = nstations - 1)) {
   
   routes <- combn(nstations, 2) %>% t %>% set_colnames(c('from', 'to'))
   

@@ -5,8 +5,10 @@
 #' @docType package
 #' @name dynFare
 #'
-#' @importFrom dplyr mutate
+#' @importFrom data.table rbindlist
 #' @importFrom foreach foreach %do%
-#' @importFrom magrittr %>% %$% %T>% %<>% set_colnames
+#' @importFrom Matrix bdiag sparseMatrix
+#' @importFrom mvtnorm rmvnorm
+#' @importFrom plyr dlply
 
 NULL
